@@ -1,16 +1,27 @@
+using System;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
+using System.Net.Http;
 using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
+
+var config = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .Build();
 
 using var client = new HttpClient();
-string url = "https://api-endpoint.com/api/v1/create";
-int delayMilliseconds = 1000; // 1 second delay (1000ms = 1 second)
+string url = config["ApiSettings:Url"] ?? "https://api-endpoint.com/api/v1/create";
+int delayMilliseconds = int.TryParse(config["ApiSettings:DelayMilliseconds"], out int delay) ? delay : 1000;
 
 // Standard Headers
 client.DefaultRequestHeaders.Clear();
 client.DefaultRequestHeaders.Add("USESERVICEBUSQUEUE", "false");
 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-string csvPath = "data.csv";
+string csvPath = config["FileSettings:CsvPath"] ?? "data.csv";
 var lines = File.ReadAllLines(csvPath);
 
 // Iterating through the CSV

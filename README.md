@@ -1,12 +1,17 @@
-# API Runner
+# API Runner v1.1.0
 
 API Runner is a lightweight, asynchronous C# console application designed to read batch data from a CSV file, format it into structured JSON payloads, and send it sequentially to a REST API. It features built-in rate-limiting (delaying between requests) and comprehensive logging of responses and errors.
+
+## New in v1.1.0
+- **Configuration Management**: Moved hardcoded settings to `appsettings.json`.
+- **Environment Variables**: Support for overriding settings via environment variables.
 
 ## Features
 
 - **Batch Processing**: Reads bulk data from a `data.csv` file, skipping the header row automatically.
 - **Automated JSON Payload Generation**: Maps CSV columns (`TransactionID`, `EmailAddress`, `CreationDate`) into a structured JSON request body.
 - **REST API Integration**: Sends asynchronous POST requests using `HttpClient` to your configured API endpoint.
+- **External Configuration**: Manage API URLs and delays without recompiling via `appsettings.json`.
 - **Rate Limiting / Throttling**: Configurable delay (default: 1 second) between consecutive API requests to prevent server throttling or overloading.
 - **Detailed Logging**: Records execution logs containing timestamps, processed email addresses, HTTP status codes, and raw server response bodies. Logs are streamed to both the console and a local `response.txt` file.
 - **Robust Error Handling**: Gracefully catches and logs exceptions without interrupting the entire batch process.

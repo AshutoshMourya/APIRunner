@@ -1,0 +1,14 @@
+E:\Absolute Learning\Projects\Personal Project\APIRunner\bin\Debug\net8.0\APIRunner.exe
+E:\Absolute Learning\Projects\Personal Project\APIRunner\bin\Debug\net8.0\APIRunner.deps.json
+E:\Absolute Learning\Projects\Personal Project\APIRunner\bin\Debug\net8.0\APIRunner.runtimeconfig.json
+E:\Absolute Learning\Projects\Personal Project\APIRunner\bin\Debug\net8.0\APIRunner.dll
+E:\Absolute Learning\Projects\Personal Project\APIRunner\bin\Debug\net8.0\APIRunner.pdb
+E:\Absolute Learning\Projects\Personal Project\APIRunner\obj\Debug\net8.0\APIRunner.GeneratedMSBuildEditorConfig.editorconfig
+E:\Absolute Learning\Projects\Personal Project\APIRunner\obj\Debug\net8.0\APIRunner.AssemblyInfoInputs.cache
+E:\Absolute Learning\Projects\Personal Project\APIRunner\obj\Debug\net8.0\APIRunner.AssemblyInfo.cs
+E:\Absolute Learning\Projects\Personal Project\APIRunner\obj\Debug\net8.0\APIRunner.csproj.CoreCompileInputs.cache
+E:\Absolute Learning\Projects\Personal Project\APIRunner\obj\Debug\net8.0\APIRunner.dll
+E:\Absolute Learning\Projects\Personal Project\APIRunner\obj\Debug\net8.0\refint\APIRunner.dll
+E:\Absolute Learning\Projects\Personal Project\APIRunner\obj\Debug\net8.0\APIRunner.pdb
+E:\Absolute Learning\Projects\Personal Project\APIRunner\obj\Debug\net8.0\APIRunner.genruntimeconfig.cache
+E:\Absolute Learning\Projects\Personal Project\APIRunner\obj\Debug\net8.0\ref\APIRunner.dll

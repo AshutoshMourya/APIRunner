@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration.Attributes;
+using System.Linq;
 
 var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -22,16 +26,18 @@ client.DefaultRequestHeaders.Add("USESERVICEBUSQUEUE", "false");
 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
 string csvPath = config["FileSettings:CsvPath"] ?? "data.csv";
-var lines = File.ReadAllLines(csvPath);
+
+using var reader = new StreamReader(csvPath);
+using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+var records = csv.GetRecords<CsvRecord>().ToList();
 
 // Iterating through the CSV
-for (int index = 0; index < lines.Length - 1; index++)
+for (int index = 0; index < records.Count; index++)
 {
-    string line = lines[index + 1]; // Skip header
-    var columns = line.Split(',');
-    string TransactionID = columns[0];
-    string emailAddress = columns[1];
-    string creationDate = columns[2];
+    var record = records[index];
+    string TransactionID = record.TransactionID;
+    string emailAddress = record.EmailAddress;
+    string creationDate = record.CreationDate;
 
     string jsonPayload = $@"{{
       ""Header"": {{
@@ -61,7 +67,7 @@ for (int index = 0; index < lines.Length - 1; index++)
 
         // --- THE DELAY LOGIC ---
         // Only delay if it's NOT the last item in the list
-        if (index < lines.Length - 2) 
+        if (index < records.Count - 1) 
         {
             Console.WriteLine($"Waiting {delayMilliseconds}ms before next request...");
             await Task.Delay(delayMilliseconds);
@@ -76,3 +82,13 @@ for (int index = 0; index < lines.Length - 1; index++)
 }
 
 Console.WriteLine("All requests processed.");
+
+public class CsvRecord
+{
+    [Index(0)]
+    public string TransactionID { get; set; }
+    [Index(1)]
+    public string EmailAddress { get; set; }
+    [Index(2)]
+    public string CreationDate { get; set; }
+}

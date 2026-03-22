@@ -32,8 +32,10 @@ Postman has become a bloated Electron monster. **APIRunner** is the solution: a 
 
 ---
 
-## 🆕 New in v1.1.0
+## 🆕 New in v1.2.0
+-   **Robust CSV Parsing**: Integrated `CsvHelper` to safely handle edge cases like internal commas, quoted strings, and direct-to-object mapping (goodbye `String.Split`).
 
+## 🆕 New in v1.1.0
 -   **Configuration Management**: No more hardcoding! All settings now live in `appsettings.json`.
 -   **Environment Overrides**: Support for overriding configuration via System Environment Variables.
 -   **Repository Hygiene**: Cleaned up build artifacts with optimized `.gitignore`.

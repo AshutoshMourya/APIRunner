@@ -109,5 +109,30 @@ If you're having trouble with your current tools and found this via:
 
 ---
 
-## 🤝 Contribution
-Found a bug or want a feature (like collection support)? Open an Issue or submit a PR!
+## 🤝 Contributing & Collaboration
+
+**APIRunner** started as a personal tool to solve the bloat of modern API clients, but it thrives on community input. Whether you're a beginner or a veteran, your contributions are welcome!
+
+### How to Help
+-   **Reporting Bugs**: Found an edge case with a CSV or a weird API response? Open an [Issue](https://github.com/AshutoshMourya/APIRunner/issues).
+-   **New Features**: Want to add support for JSON data sources, OAuth2 authentication, or a full CLI dashboard? We'd love to see it!
+-   **Documentation**: Help us improve the README, add examples, or write a "Getting Started" guide.
+
+### Contribution Workflow
+1.  **Fork** the repository.
+2.  **Clone** your fork (`git clone https://github.com/YOUR_USERNAME/APIRunner.git`).
+3.  **Create a branch** for your feature/fix (`git checkout -b feature/cool-new-thing`).
+4.  **Commit** your changes with descriptive messages.
+5.  **Push** to your fork and **Open a Pull Request**.
+
+### 🗺️ Future Roadmap (Ideas for Beginners)
+- [ ] Support for `PUT` and `PATCH` methods.
+- [ ] Support for custom HTTP headers via `appsettings.json`.
+- [ ] Integration of a progress bar (e.g., using [Spectre.Console](https://spectreconsole.net)).
+- [ ] Support for reading Postman Environment files.
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**. Feel free to use, modify, and distribute it as you wish. See the [LICENSE](LICENSE) file for more details.

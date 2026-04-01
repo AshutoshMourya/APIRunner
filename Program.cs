@@ -9,6 +9,7 @@ using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration.Attributes;
 using System.Linq;
+using Polly;
 
 var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -19,6 +20,8 @@ var config = new ConfigurationBuilder()
 using var client = new HttpClient();
 string url = config["ApiSettings:Url"] ?? "https://api-endpoint.com/api/v1/create";
 int delayMilliseconds = int.TryParse(config["ApiSettings:DelayMilliseconds"], out int delay) ? delay : 1000;
+int maxRetries = int.TryParse(config["RetrySettings:MaxRetries"], out int retries) ? retries : 3;
+int baseDelaySeconds = int.TryParse(config["RetrySettings:BaseDelaySeconds"], out int baseDelay) ? baseDelay : 2;
 
 // Standard Headers
 client.DefaultRequestHeaders.Clear();
@@ -30,6 +33,25 @@ string csvPath = config["FileSettings:CsvPath"] ?? "data.csv";
 using var reader = new StreamReader(csvPath);
 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 var records = csv.GetRecords<CsvRecord>().ToList();
+
+var retryPolicy = Policy<HttpResponseMessage>
+    .Handle<HttpRequestException>()
+    .Or<TaskCanceledException>()
+    .OrResult(r => r.StatusCode == System.Net.HttpStatusCode.RequestTimeout)        // 408
+    .OrResult(r => r.StatusCode == System.Net.HttpStatusCode.TooManyRequests)       // 429
+    .OrResult(r => r.StatusCode == System.Net.HttpStatusCode.InternalServerError)   // 500
+    .OrResult(r => r.StatusCode == System.Net.HttpStatusCode.BadGateway)            // 502
+    .OrResult(r => r.StatusCode == System.Net.HttpStatusCode.ServiceUnavailable)    // 503
+    .OrResult(r => r.StatusCode == System.Net.HttpStatusCode.GatewayTimeout)        // 504
+    .WaitAndRetryAsync(
+        retryCount: maxRetries,
+        sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(baseDelaySeconds, retryAttempt)),
+        onRetry: (outcome, timespan, retryAttempt, context) =>
+        {
+            string reason = outcome.Exception?.Message 
+                ?? $"HTTP {(int)outcome.Result.StatusCode} ({outcome.Result.StatusCode})";
+            Console.WriteLine($"[Retry] Attempt {retryAttempt}/{maxRetries} — {reason}. Waiting {timespan.TotalSeconds}s...");
+        });
 
 // Iterating through the CSV
 for (int index = 0; index < records.Count; index++)
@@ -54,11 +76,14 @@ for (int index = 0; index < records.Count; index++)
       }}
     }}";
 
-    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
     try 
     {
-        var response = await client.PostAsync(url, content);
+        var response = await retryPolicy.ExecuteAsync(async () => 
+        {
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+            return await client.PostAsync(url, content);
+        });
+        
         string responseBody = await response.Content.ReadAsStringAsync();
         string logLine = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Sent: {emailAddress} | Status: {response.StatusCode} | Response: {responseBody}";
         

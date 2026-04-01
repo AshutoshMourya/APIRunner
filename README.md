@@ -1,4 +1,4 @@
-# ⚡ APIRunner v1.1.0
+# ⚡ APIRunner v1.3.0
 ### The Fast, Lightweight API Runner That Actually Feels Good to Use.
 
 [![.NET](https://img.shields.io/badge/.NET-5.0%2B-blue.svg)](https://dotnet.microsoft.com/download)
@@ -23,6 +23,7 @@ Postman has become a bloated Electron monster. **APIRunner** is the solution: a 
 
 ## ✨ Features
 
+-   **Advanced Resilience**: Integrated Polly with exponential backoff to handle transient API failures, network timeouts, and specific HTTP error codes (e.g., 503, 429).
 -   **Batch Processing**: Automatically reads bulk data from `data.csv`, handling headers seamlessly.
 -   **Dynamic JSON Generation**: Maps CSV columns (`TransactionID`, `EmailAddress`, etc.) into structured JSON payloads on the fly.
 -   **REST API Integration**: High-performance asynchronous POST requests using `HttpClient`.
@@ -32,10 +33,13 @@ Postman has become a bloated Electron monster. **APIRunner** is the solution: a 
 
 ---
 
-## 🆕 New in v1.2.0
+## 🆕 New in v1.3.0
+-   **Advanced Resilience with Polly**: Added configurable retry policies with exponential backoff to handle transient API downtime, 503 errors, and network timeouts.
+
+## 🆕 v1.2.0
 -   **Robust CSV Parsing**: Integrated `CsvHelper` to safely handle edge cases like internal commas, quoted strings, and direct-to-object mapping (goodbye `String.Split`).
 
-## 🆕 New in v1.1.0
+## 🆕 v1.1.0
 -   **Configuration Management**: No more hardcoding! All settings now live in `appsettings.json`.
 -   **Environment Overrides**: Support for overriding configuration via System Environment Variables.
 -   **Repository Hygiene**: Cleaned up build artifacts with optimized `.gitignore`.
@@ -66,6 +70,10 @@ Edit `appsettings.json` to point to your API:
   },
   "FileSettings": {
     "CsvPath": "data.csv"
+  },
+  "RetrySettings": {
+    "MaxRetries": 3,
+    "BaseDelaySeconds": 2
   }
 }
 ```
